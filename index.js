@@ -49,7 +49,6 @@ app.post('/cars', (req, res) => {
 
 
 
-
 // API Routes
 app.post('/cars/carsdata', (req, res) => {
   console.log(req.body.car)
@@ -70,16 +69,32 @@ app.post('/cars/carsdata', (req, res) => {
 );
 
 
+app.post('/carsdata', (req, res) => {
+  console.log(req.body.car)
+  let query = `SELECT * FROM carsdata`;
+  console.log(query);
+    db.query(query, (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
 
 app.post('/cars/bookings', (req, res) => {
-  const { name, email, mobile, location, date, pickup, droptime } = req.body;
+  const { name, email, mobile, location, pickuptime, pickupdate, dropdate } = req.body;
 
   // Use parameterized query to prevent SQL injection
-  let query = `INSERT INTO bookings (name, mobile, email, location, date, pickup, droptimen) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO bookings (name, mobile, email, location, pickuptime, pickupdate, dropdate) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-
-
-  db.query(query, [name, mobile, email, location, date, pickup, droptime], (err, results) => {
+  db.query(query, [name, mobile, email, location, pickuptime, pickupdate, dropdate], (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
@@ -115,6 +130,54 @@ app.post('/cars/contact', (req, res) => {
   });
 });
 
+
+
+app.post('/insertcars', (req, res) => {
+  const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4 } = req.body;
+
+  // Use parameterized query to prevent SQL injection
+  let query = `INSERT INTO carsdata(model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  db.query(query, [model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4], (err, results) => {
+
+    if (err) {
+      console.error('Error inserting data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    // res.status(200).send('Data received and inserted into the database.');
+
+  });
+});
+
+
+
+app.post('/deletecar', (req, res) => {
+  const model = req.body.model; // Assuming carId is sent in the request body
+
+  // Use parameterized query to prevent SQL injection
+  let query = `DELETE FROM carsdata WHERE carsdata.model = '${model}'`;
+
+  console.log(query)
+
+  db.query(query,[model] , (err, results) => {
+    if (err) {
+      console.error('Error deleting data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    if (results.affectedRows === 0) {
+      res.status(404).json({ error: 'Car not found for deletion' });
+      return;
+    }
+
+    console.log(results);
+    res.status(200).json({ message: 'Car deleted from the database.' });
+  });
+});
 
 
 
