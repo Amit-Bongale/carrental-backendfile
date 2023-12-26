@@ -89,12 +89,12 @@ app.post('/carsdata', (req, res) => {
 
 
 app.post('/cars/bookings', (req, res) => {
-  const { name, email, mobile, location, pickuptime, pickupdate, dropdate } = req.body;
+  const { name, email, mobile, location, pickuptime, pickupdate, dropdate , carmodel } = req.body;
 
   // Use parameterized query to prevent SQL injection
-  let query = `INSERT INTO bookings (name, mobile, email, location, pickuptime, pickupdate, dropdate) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO bookings (name, mobile, email, location, pickuptime, pickupdate, dropdate, carmodel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  db.query(query, [name, mobile, email, location, pickuptime, pickupdate, dropdate], (err, results) => {
+  db.query(query, [name, mobile, email, location, pickuptime, pickupdate, dropdate , carmodel], (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
