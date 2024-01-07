@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2023 at 02:54 PM
+-- Generation Time: Jan 06, 2024 at 08:21 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -44,26 +44,6 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`name`, `mobile`, `email`, `location`, `pickuptime`, `pickupdate`, `dropdate`, `id`, `carmodel`) VALUES
-('sdasd', 4859, 'sdsdf', 'sdff', 'dvsd', 'dvs', 'dfvsdf', 1, ''),
-('amit', 123456789, 'amit@gmail.com', 'banglore', '10/11/2023', '9 am', '10 pm', 2, ''),
-('punith', 2147483647, 'punith@gmail.com', 'haveri', '22/11/23', '9 am', '3pm', 3, ''),
-('sdasd', 84984564, 'sdsdf', 'sdff', 'dvsd', 'dvs', 'dfvsdf', 4, ''),
-('apunith', 2147483647, 'punith@gmail.com', 'haveri', '22/11/23', '12 am', '3pm', 5, ''),
-('anup', 74855, 'anup@gmail.com', 'haveri', '22/11/23', '12 am', '3pm', 6, ''),
-('binod', 544846, 'dsfasdflshdfl', 'sdsasnfalsjkd', 'dfsdn', 'fasfnd', 'dsfak', 7, ''),
-('binod2', 544846, 'dsfasdflshdfl', 'sdsasnfalsjkd', 'dfsdn', 'fasfnd', 'dsfak', 8, ''),
-('binod2', 2147483647, 'dsfasdflshdfl', 'sdsasncasdfalsjkd', 'dfsdn', 'fasfnd', '99', 9, ''),
-('purple', 545846, 'dsfasdflshdfl', 'bngsdfalsjkd', 'dfsdndf', 'fasfnd', '100', 10, ''),
-('purple', 545846, 'dsfasdflshdfl', 'bngsdfalsjkd', 'dfsdndf', 'fasfnd', '100', 11, ''),
-('black', 1669841, 'dsfasdflshdfl', 'bngsdfalsjkd', '2023-11-15', '01:16', '03:12', 12, ''),
-('black', 1669841, 'dsfasdflshdfl', 'bngsdfalsjkd', '2023-11-15', '01:16', '15:12', 13, ''),
-('bokings', 165165, 'gibip57727@ikanid.com', 'ffafa', '4551-05-11', '14:20', '01:19', 14, ''),
-('test 15', 2147483647, 'gibip57727@ikanid.com', 'banglore', '2023-12-08', '05:24', '17:26', 15, ''),
-('test 15', 2147483647, 'gibip57727@ikanid.com', 'banglore', '2023-12-08', '05:24', '17:26', 16, ''),
-('asdfasd', 2147483647, 'hokado4411@mcenb.com', 'hkr', '22:34', '2023-12-08', '2023-12-10', 17, ''),
-('asdfasd', 2147483647, 'hokado4411@mcenb.com', 'hkr', '22:34', '2023-12-08', '2023-12-10', 18, ''),
-('asdfasd', 2147483647, 'hokado4411@mcenb.com', 'hkr', '22:34', '2023-12-08', '2023-12-10', 19, ''),
-('Amit 20', 2147483647, 'hokado4411@mcenb.com', 'hrkasdaf', '20:53', '2023-12-09', '2023-12-13', 20, ''),
 ('Amit 21', 2147483647, 'hokado44sfd11@mcenb.com', 'banglore', '20:53', '2023-12-09', '2023-12-13', 21, ''),
 ('amit', 2147483647, 'wenayep651@wikfee.com', 'sanajksdfaskd', '23:22', '2023-12-27', '2023-12-29', 22, 'Kia Optima'),
 ('amit', 2147483647, 'wenayep651@wikfee.com', 'sanajksdfaskd', '23:22', '2023-12-27', '2023-12-29', 23, 'Kia Optima');
