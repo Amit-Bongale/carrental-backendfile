@@ -29,7 +29,7 @@ app.use(express.json());
 
 
 // API Routes
-app.post('/cars', (req, res) => {
+app.post('/featuredcarsdetails', (req, res) => {
   console.log(req.body.car)
   let query = `SELECT * FROM featuredcars WHERE model='${req.body.car}'`;
   console.log(query);
