@@ -29,23 +29,23 @@ app.use(express.json());
 
 
 // API Routes
-app.post('/featuredcarsdetails', (req, res) => {
-  console.log(req.body.car)
-  let query = `SELECT * FROM featuredcars WHERE model='${req.body.car}'`;
-  console.log(query);
-    db.query(query, (err, results) => {
+// app.post('/featuredcarsdetails', (req, res) => {
+//   console.log(req.body.car)
+//   let query = `SELECT * FROM featuredcars WHERE model='${req.body.car}'`;
+//   console.log(query);
+//     db.query(query, (err, results) => {
       
-      if (err) {
-        res.status(500).send('Internal Server Error');
-        return;
-      }
+//       if (err) {
+//         res.status(500).send('Internal Server Error');
+//         return;
+//       }
       
-      console.log(results)
-      res.json(results);
+//       console.log(results)
+//       res.json(results);
       
-    });
-  }
-);
+//     });
+//   }
+// );
 
 
 
