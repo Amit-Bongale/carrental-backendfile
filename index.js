@@ -154,8 +154,32 @@ app.post('/insertcars', (req, res) => {
 
 
 
+app.post('/updatecars', (req, res) => {
+  const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4 } = req.body;
+
+  // Use parameterized query to prevent SQL injection
+  let query = `UPDATE carsdata SET 
+  drivername='${drivername}', driverrating='${driverrating}', carrating='${carrating}',seats='${seats}',priceperday='${priceperday}', drivercontact ='${drivercontact}',driveremail='${driveremail}',
+  imageurl1='${imageurl1}', imageurl2 = '${imageurl2}', imageurl3='${imageurl3}',imageurl4='${imageurl4}' WHERE model='${model}' `;
+
+  db.query(query, [model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4], (err, results) => {
+
+    if (err) {
+      console.error('Error inserting data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    console.log(results);
+    // res.status(200).send('Data received and inserted into the database.');
+
+  });
+});
+
+
+
 app.post('/deletecar', (req, res) => {
-  const model = req.body.model; // Assuming carId is sent in the request body
+  const model = req.body.model; //carId is sent in the request body
 
   // Use parameterized query to prevent SQL injection
   let query = `DELETE FROM carsdata WHERE carsdata.model = '${model}'`;
