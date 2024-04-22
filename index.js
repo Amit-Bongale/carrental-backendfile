@@ -50,6 +50,24 @@ app.use(express.json());
 
 
 // API Routes
+app.post('/carsdata', (req, res) => {
+  console.log(req.body.car)
+  let query = `SELECT * FROM carsdata`;
+  console.log(query);
+    db.query(query, (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
 app.post('/cars/carsdata', (req, res) => {
   console.log(req.body.car)
   let query = `SELECT * FROM carsdata WHERE model='${req.body.car}'`;
@@ -69,9 +87,9 @@ app.post('/cars/carsdata', (req, res) => {
 );
 
 
-app.post('/carsdata', (req, res) => {
+app.post('/featuredcars', (req, res) => {
   console.log(req.body.car)
-  let query = `SELECT * FROM carsdata`;
+  let query = `SELECT * FROM featuredcars`;
   console.log(query);
     db.query(query, (err, results) => {
       
@@ -86,6 +104,27 @@ app.post('/carsdata', (req, res) => {
     });
   }
 );
+
+
+// API Routes
+app.post('/carsimages', (req, res) => {
+  console.log(req.body.id)
+  let query = `SELECT * FROM carsimages WHERE carid='${req.body.id}'`;
+  console.log(query);
+    db.query(query, (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
 
 
 app.post('/cars/bookings', (req, res) => {
@@ -133,12 +172,12 @@ app.post('/cars/contact', (req, res) => {
 
 
 app.post('/insertcars', (req, res) => {
-  const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4 } = req.body;
+  const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail } = req.body;
 
   // Use parameterized query to prevent SQL injection
-  let query = `INSERT INTO carsdata(model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO carsdata(model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  db.query(query, [model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4], (err, results) => {
+  db.query(query, [model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail,thumbnail], (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
@@ -155,14 +194,14 @@ app.post('/insertcars', (req, res) => {
 
 
 app.post('/updatecars', (req, res) => {
-  const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4 } = req.body;
+  const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail} = req.body;
 
   // Use parameterized query to prevent SQL injection
   let query = `UPDATE carsdata SET 
   drivername='${drivername}', driverrating='${driverrating}', carrating='${carrating}',seats='${seats}',priceperday='${priceperday}', drivercontact ='${drivercontact}',driveremail='${driveremail}',
-  imageurl1='${imageurl1}', imageurl2 = '${imageurl2}', imageurl3='${imageurl3}',imageurl4='${imageurl4}' WHERE model='${model}' `;
+  thumbnail='${thumbnail}' WHERE model='${model}' `;
 
-  db.query(query, [model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, imageurl1, imageurl2, imageurl3, imageurl4], (err, results) => {
+  db.query(query, (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
