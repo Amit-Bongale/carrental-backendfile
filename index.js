@@ -223,6 +223,26 @@ app.post('/deletecar', (req, res) => {
 });
 
 
+
+app.post('/allcarsimages', (req, res) => {
+  console.log(req.body.car)
+  let query = `SELECT * FROM carsimages`;
+  console.log(query);
+    db.query(query, (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
 app.post('/bookingdetails', (req, res) => {
   console.log(req.body.car)
   let query = `SELECT * FROM bookings`;
