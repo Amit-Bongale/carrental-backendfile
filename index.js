@@ -29,27 +29,7 @@ app.use(express.json());
 
 
 // API Routes
-// app.post('/featuredcarsdetails', (req, res) => {
-//   console.log(req.body.car)
-//   let query = `SELECT * FROM featuredcars WHERE model='${req.body.car}'`;
-//   console.log(query);
-//     db.query(query, (err, results) => {
-      
-//       if (err) {
-//         res.status(500).send('Internal Server Error');
-//         return;
-//       }
-      
-//       console.log(results)
-//       res.json(results);
-      
-//     });
-//   }
-// );
 
-
-
-// API Routes
 app.post('/carsdata', (req, res) => {
   console.log(req.body.car)
   let query = `SELECT * FROM carsdata`;
@@ -175,18 +155,18 @@ app.post('/insertcars', (req, res) => {
   const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail } = req.body;
 
   // Use parameterized query to prevent SQL injection
-  let query = `INSERT INTO carsdata(model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO carsdata(model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(query, [model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail,thumbnail], (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send({ sqlMessage: err.sqlMessage });
       return;
     }
 
     console.log(results);
-    // res.status(200).send('Data received and inserted into the database.');
+    res.status(200).send('car inserted Sucessfully');
 
   });
 });
@@ -205,12 +185,12 @@ app.post('/updatecars', (req, res) => {
 
     if (err) {
       console.error('Error inserting data:', err);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send({ sqlMessage: err.sqlMessage });
       return;
     }
 
     console.log(results);
-    // res.status(200).send('Data received and inserted into the database.');
+    res.status(200).send('Car Updated Sucessfully');
 
   });
 });
