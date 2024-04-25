@@ -107,7 +107,7 @@ app.post('/carsimages', (req, res) => {
 
 
 
-app.post('/cars/bookings', (req, res) => {
+app.post('/bookings', (req, res) => {
   const { name, email, mobile, location, pickuptime, pickupdate, dropdate , carmodel } = req.body;
 
   // Use parameterized query to prevent SQL injection
@@ -122,18 +122,18 @@ app.post('/cars/bookings', (req, res) => {
     }
 
     console.log(results);
-    // res.status(200).send('Data received and inserted into the database.');
+    res.status(200).send({message : 'Car Booked Sucessfully'});
 
   });
 });
 
 
 
-app.post('/cars/contact', (req, res) => {
+app.post('/contactus', (req, res) => {
   const { firstname, lastname, email,  mobile,  message } = req.body;
 
   // Use parameterized query to prevent SQL injection
-  let query = `INSERT INTO contact (firstname, lastname, email, mobile, message) VALUES (?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO contact_us (firstname, lastname, email, mobile, message) VALUES (?, ?, ?, ?, ?)`;
 
   db.query(query, [firstname, lastname, email,  mobile,  message], (err, results) => {
 
@@ -241,6 +241,88 @@ app.post('/allcarsimages', (req, res) => {
     });
   }
 );
+
+
+
+
+app.post('/signup', (req, res) => {
+  const { name , email , mobile , password } = req.body;
+
+  let query = `INSERT INTO users(name, email, password, phone) VALUES (? , ? , ? , ?)`;
+
+  db.query(query, [name , email , password , mobile], (err, results) => {
+
+    if (err) {
+      console.error('Error inserting data:', err);
+      res.status(500).send({ sqlMessage: err.sqlMessage });
+      return;
+    }
+
+    console.log(results);
+    res.status(200).send({ message: 'Account Created Successfully'});
+
+  });
+});
+
+
+
+
+app.post('/login', (req, res) => {
+  const { email , password } = req.body;
+
+  let query = `select * from users where email = '${email}' and password= '${password}' `;
+  console.log(query);
+
+  db.query(query, (err, results) => {
+
+    if (err) {
+      console.error('Error Fetching data:', err);
+      res.status(500).send({ sqlMessage: err.sqlMessage });
+      return;
+    }
+    
+    if(results.length > 0){
+      // return res.json("Login Sucessfull");
+      return res.status(200).send({ message: 'Loged in Sucessfully'});
+
+    } else {
+      // return res.json("Login failed");
+      return res.status(401).send({ message: 'Incorrect ID or Password'});
+    }
+    console.log(results);
+    // res.status(200).send({ message: 'Acces granted'});
+
+  });
+});
+
+
+
+app.post('/adminlogin', (req, res) => {
+
+  const { id , password } = req.body;
+
+  let query = `select * from admin where id ='${id}' and password='${password}' `;
+  console.log(query);
+
+  db.query(query, (err, results) => {
+
+    if (err) {
+      console.error('Error Fetching data:', err);
+      res.status(500).send({ sqlMessage: err.sqlMessage });
+      return;
+    }
+    
+    if (results.length > 0) {
+      return res.status(200).send({ message: 'acess granted'});
+    } else {
+      return res.status(401).send({ message: 'Incorrect ID or Password'});
+    }
+
+    console.log(results);
+
+  });
+});
+
 
 
 app.post('/bookingdetails', (req, res) => {
