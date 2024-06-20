@@ -244,7 +244,6 @@ app.post('/allcarsimages', (req, res) => {
 
 
 
-
 app.post('/signup', (req, res) => {
   const { name , email , mobile , password } = req.body;
 
@@ -263,8 +262,6 @@ app.post('/signup', (req, res) => {
 
   });
 });
-
-
 
 
 app.post('/login', (req, res) => {
