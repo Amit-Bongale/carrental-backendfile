@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 22, 2024 at 08:45 PM
+-- Generation Time: Jun 20, 2024 at 11:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Database: `cars`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `password`) VALUES
+('1234', 'abcd');
 
 -- --------------------------------------------------------
 
@@ -46,7 +64,8 @@ CREATE TABLE `bookings` (
 INSERT INTO `bookings` (`name`, `mobile`, `email`, `location`, `pickuptime`, `pickupdate`, `dropdate`, `id`, `carmodel`) VALUES
 ('Amit 21', 2147483647, 'hokado44sfd11@mcenb.com', 'banglore', '20:53', '2023-12-09', '2023-12-13', 21, ''),
 ('amit', 2147483647, 'wenayep651@wikfee.com', 'sanajksdfaskd', '23:22', '2023-12-27', '2023-12-29', 22, 'Kia Optima'),
-('amit', 2147483647, 'wenayep651@wikfee.com', 'sanajksdfaskd', '23:22', '2023-12-27', '2023-12-29', 23, 'Kia Optima');
+('amit', 2147483647, 'wenayep651@wikfee.com', 'sanajksdfaskd', '23:22', '2023-12-27', '2023-12-29', 23, 'Kia Optima'),
+('', 0, '', '', '', '', '', 24, 'Tesla Model 3');
 
 -- --------------------------------------------------------
 
@@ -273,10 +292,10 @@ INSERT INTO `carsimages` (`carid`, `image`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contact`
+-- Table structure for table `contact_us`
 --
 
-CREATE TABLE `contact` (
+CREATE TABLE `contact_us` (
   `firstname` varchar(20) NOT NULL,
   `lastname` varchar(20) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -286,10 +305,10 @@ CREATE TABLE `contact` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `contact`
+-- Dumping data for table `contact_us`
 --
 
-INSERT INTO `contact` (`firstname`, `lastname`, `email`, `mobile`, `message`, `id`) VALUES
+INSERT INTO `contact_us` (`firstname`, `lastname`, `email`, `mobile`, `message`, `id`) VALUES
 ('abc', 'abc', 'gibip57727@ikanid.com', 2147483647, 'ttest', 6),
 ('rakshita', 'balikai', 'rakshitabalikai09@gmail.com', 2147483647, 'very good carrental service', 7),
 ('', '', '', 0, '', 8),
@@ -330,9 +349,45 @@ INSERT INTO `featuredcars` (`model`, `drivername`, `driverrating`, `carrating`, 
 ('Toyota Camry', 'Rajesh Kumar', '4.5', '4.2', '5', '3000', '+91 98765 43210', 'rajesh.kumar@gmail.com', 'https://imgd-ct.aeplcdn.com/1056x660/n/b886bsa_1460381.jpg?q=80'),
 ('Ford Fusion', 'Vikram Singh', '4.0', '3.8', '4', '3200', '+91 76543 21098', 'vikram.singh@gmail.com', 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/2019_Ford_Fusion_Titanium_Energi%2C_front_2.29.20.jpg/1920px-2019_Ford_Fusion_Titanium_Energi%2C_front_2.29.20.jpg');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `name` varchar(25) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `phone` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`name`, `email`, `password`, `phone`) VALUES
+('asd', 'daf837@picdv.com', 'asdf', 123456789),
+('asd', 'deaf837@picdv.com', 'asdf', 123456789),
+('asd', 'debamaf837@picdv.com', 'asdf', 123456789),
+('asd', 'f7@picdv.com', 'asdf', 123456789),
+('asd', 'f837@picdv.com', 'asdf', 123456789),
+('asd', 'f87@picdv.com', 'asdf', 123456789),
+('asd', 'f@picdv.com', 'asdf', 123456789),
+('asd', 'fe@picdv.com', 'asdf', 123456789),
+('asd', 'feg@picdv.com', 'asdf', 123456789),
+('asd', 'fegt@picdv.com', 'asdf', 123456789),
+('abc', 'test', 'asdf', 123456789);
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `bookings`
@@ -353,9 +408,9 @@ ALTER TABLE `carsimages`
   ADD PRIMARY KEY (`carid`,`image`);
 
 --
--- Indexes for table `contact`
+-- Indexes for table `contact_us`
 --
-ALTER TABLE `contact`
+ALTER TABLE `contact_us`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -365,6 +420,12 @@ ALTER TABLE `featuredcars`
   ADD PRIMARY KEY (`drivername`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -372,18 +433,18 @@ ALTER TABLE `featuredcars`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `carsdata`
 --
 ALTER TABLE `carsdata`
-  MODIFY `carid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `carid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
--- AUTO_INCREMENT for table `contact`
+-- AUTO_INCREMENT for table `contact_us`
 --
-ALTER TABLE `contact`
+ALTER TABLE `contact_us`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
