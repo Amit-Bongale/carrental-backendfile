@@ -244,6 +244,59 @@ app.post('/allcarsimages', (req, res) => {
 
 
 
+app.post('/deleteimage', (req, res) => {
+  const {carid , image} = req.body; //carId is sent in the request body
+
+  // Use parameterized query to prevent SQL injection
+  let query = `DELETE FROM carsimages WHERE carid = '${carid}' AND image='${image}'`;
+
+  console.log(query)
+
+  db.query(query , (err, results) => {
+    if (err) {
+      console.error('Error deleting data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    if (results.affectedRows === 0) {
+      res.status(404).json({ error: 'Car not found for deletion' });
+      return;
+    }
+
+    console.log(results);
+    res.status(200).json({ message: 'Car deleted from the database.' });
+  });
+});
+
+
+app.post('/insertcarimage', (req, res) => {
+  const {carid , image} = req.body;
+
+  // Use parameterized query to prevent SQL injection
+  let query = `INSERT INTO carsimages (carid, image) VALUES (?, ?)`;
+
+  console.log(query)
+
+  db.query(query ,[carid , image], (err, results) => {
+    if (err) {
+      console.error('Error Inserting data:', err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    if (results.affectedRows === 0) {
+      res.status(404).json({ error: 'Can not Insert Image' });
+      return;
+    }
+
+    console.log(results);
+    res.status(200).json({ message: 'image Inserted into the database.' });
+  });
+});
+
+
+
 app.post('/signup', (req, res) => {
   const { name , email , mobile , password } = req.body;
 
