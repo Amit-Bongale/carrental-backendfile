@@ -108,12 +108,12 @@ app.post('/carsimages', (req, res) => {
 
 
 app.post('/bookings', (req, res) => {
-  const { name, email, mobile, location, pickuptime, pickupdate, dropdate , carmodel } = req.body;
+  const {customer_id, name, email, mobile, location, pickuptime, pickupdate, dropdate , car_id, carmodel } = req.body;
 
   // Use parameterized query to prevent SQL injection
-  let query = `INSERT INTO bookings (name, mobile, email, location, pickuptime, pickupdate, dropdate, carmodel) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  let query = `INSERT INTO bookings (customer_id ,name, mobile, email, location, pickuptime, pickupdate, dropdate, car_id, carmodel) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  db.query(query, [name, mobile, email, location, pickuptime, pickupdate, dropdate , carmodel], (err, results) => {
+  db.query(query, [customer_id , name, mobile, email, location, pickuptime, pickupdate, dropdate , car_id, carmodel], (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
@@ -125,6 +125,7 @@ app.post('/bookings', (req, res) => {
     res.status(200).send({message : 'Car Booked Sucessfully'});
 
   });
+  
 });
 
 
@@ -300,13 +301,15 @@ app.post('/insertcarimage', (req, res) => {
 app.post('/signup', (req, res) => {
   const { name , email , mobile , password } = req.body;
 
-  let query = `INSERT INTO users(name, email, password, phone) VALUES (? , ? , ? , ?)`;
+  let query = `INSERT INTO users(name, email, mobile , password) VALUES (? , ? , ? , ?)`;
 
-  db.query(query, [name , email , password , mobile], (err, results) => {
+  db.query(query, [name , email , mobile, password], (err, results) => {
 
     if (err) {
       console.error('Error inserting data:', err);
-      res.status(500).send({ sqlMessage: err.sqlMessage });
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(500).send({ message: 'Account already exists, Please Login' });
+      }
       return;
     }
 
@@ -332,11 +335,10 @@ app.post('/login', (req, res) => {
     }
     
     if(results.length > 0){
-      // return res.json("Login Sucessfull");
-      return res.status(200).send({ message: 'Loged in Sucessfully'});
+      return res.status(200).json({ message: 'Loged in Sucessfully' , data : results}); 
+      // res.json(results);
 
     } else {
-      // return res.json("Login failed");
       return res.status(401).send({ message: 'Incorrect ID or Password'});
     }
     console.log(results);
