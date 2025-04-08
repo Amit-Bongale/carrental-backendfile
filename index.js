@@ -5,22 +5,25 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
+const env = require("dotenv");
+env.config();
+
 // Enable CORS for all routes
 app.use(cors());
 
 // MySQL Connection
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'cars',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD ,
+  database: process.env.DB_NAME,
 });
 
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
   } else {
-    console.log('Connected to MySQL');
+    console.log('Connected to MySQL', process.env.DB_PORT);
   }
 });
 
@@ -51,6 +54,25 @@ app.post('/carsdata', (req, res) => {
 app.post('/cars/carsdata', (req, res) => {
   console.log(req.body.car)
   let query = `SELECT * FROM carsdata WHERE model='${req.body.car}'`;
+  console.log(query);
+    db.query(query, (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+app.post('/cardetails', (req, res) => {
+  console.log(req.body.car)
+  let query = `SELECT * FROM carsdata WHERE carid='${req.body.car}'`;
   console.log(query);
     db.query(query, (err, results) => {
       
@@ -125,7 +147,7 @@ app.post('/bookings', (req, res) => {
     res.status(200).send({message : 'Car Booked Sucessfully'});
 
   });
-  
+
 });
 
 
@@ -388,6 +410,131 @@ app.post('/bookingdetails', (req, res) => {
         return;
       }
       
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+app.post('/customerbookingdetails', (req, res) => {
+  let customer_id = req.body
+  console.log(req.body.car)
+  let query = `SELECT * FROM bookings where customer_id = ?`;
+  console.log(query);
+    db.query(query, [customer_id], (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+
+app.post('/wishlist', (req, res) => {
+  let customer_id = req.body
+  console.log(req.body.car)
+  let query = `SELECT * FROM wishlist where customer_id = ?`;
+  console.log(query);
+    db.query(query, [customer_id], (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+app.post('/wishlistcars', (req, res) => {
+  let carid = req.body.carid
+  console.log(req.body.carid)
+
+  // Dynamically create placeholders for the query
+  let placeholders = carid.map(() => '?').join(',');
+
+  let query = `SELECT * FROM carsdata WHERE carid IN (${placeholders})`;
+
+  console.log(query);
+    db.query(query, carid, (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+
+app.post('/addwishlist', (req, res) => {
+  let {customer_id , carid} = req.body
+  console.log(req.body)
+  let query = `INSERT INTO wishlist(customer_id, carid) VALUES (? , ?)`;
+  console.log(query);
+    db.query(query, [customer_id , carid], (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+app.post('/checkwishlist', (req, res) => {
+  let {customer_id , carid} = req.body
+  console.log(req.body)
+  let query = `SELECT * FROM wishlist WHERE customer_id = ? and carid = ?`;
+  console.log(query);
+    db.query(query, [customer_id , carid], (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+      console.log(results)
+      res.json(results);
+      
+    });
+  }
+);
+
+
+app.post('/removewishlist', (req, res) => {
+  let {customer_id , carid} = req.body
+  console.log(req.body)
+  let query = `DELETE FROM wishlist WHERE customer_id = '${customer_id}' and carid ='${carid}'`;
+  console.log(query);
+    db.query(query,  (err, results) => {
+      
+      if (err) {
+        res.status(500).send('Internal Server Error');
+        return;
+      }
       console.log(results)
       res.json(results);
       
