@@ -1,15 +1,23 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
+const VerifyToken = require('./Middleware/VerifyToken.js');
+const AuthorizedRoles = require('./Middleware/AuthorizedRoles.js');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 
 const env = require("dotenv");
 env.config();
 
 // Enable CORS for all routes
 app.use(cors());
+
+app.use(cookieParser());
 
 // MySQL Connection
 const db = mysql.createConnection({
@@ -129,7 +137,7 @@ app.post('/carsimages', (req, res) => {
 
 
 
-app.post('/bookings', (req, res) => {
+app.post('/bookings', VerifyToken, AuthorizedRoles("user"), (req, res) => {
   const {customer_id, name, email, mobile, location, pickuptime, pickupdate, dropdate , car_id, carmodel } = req.body;
 
   // Use parameterized query to prevent SQL injection
@@ -174,7 +182,7 @@ app.post('/contactus', (req, res) => {
 
 
 
-app.post('/insertcars', (req, res) => {
+app.post('/insertcars', VerifyToken, AuthorizedRoles("admin"), (req, res) => {
   const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail } = req.body;
 
   // Use parameterized query to prevent SQL injection
@@ -196,7 +204,7 @@ app.post('/insertcars', (req, res) => {
 
 
 
-app.post('/updatecars', (req, res) => {
+app.post('/updatecars', VerifyToken, AuthorizedRoles("admin"), (req, res) => {
   const { model, drivername, driverrating, carrating, seats, priceperday, drivercontact, driveremail, thumbnail} = req.body;
 
   // Use parameterized query to prevent SQL injection
@@ -220,7 +228,7 @@ app.post('/updatecars', (req, res) => {
 
 
 
-app.post('/deletecar', (req, res) => {
+app.post('/deletecar', VerifyToken, AuthorizedRoles("admin"), (req, res) => {
   const model = req.body.model; //carId is sent in the request body
 
   // Use parameterized query to prevent SQL injection
@@ -247,7 +255,7 @@ app.post('/deletecar', (req, res) => {
 
 
 
-app.post('/allcarsimages', (req, res) => {
+app.post('/allcarsimages',  (req, res) => {
   console.log(req.body.car)
   let query = `SELECT * FROM carsimages`;
   console.log(query);
@@ -267,7 +275,7 @@ app.post('/allcarsimages', (req, res) => {
 
 
 
-app.post('/deleteimage', (req, res) => {
+app.post('/deleteimage', VerifyToken, AuthorizedRoles("admin"), (req, res) => {
   const {carid , image} = req.body; //carId is sent in the request body
 
   // Use parameterized query to prevent SQL injection
@@ -357,12 +365,19 @@ app.post('/login', (req, res) => {
     }
     
     if(results.length > 0){
-      return res.status(200).json({ message: 'Loged in Sucessfully' , data : results}); 
       // res.json(results);
+      let token = jwt.sign({id: results[0].id, role: "user"}, process.env.JWT_SECRET, { expiresIn: '24h'});
 
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict', expires: new Date(Date.now() + 24 * 60 * 60 * 1000) }
+      )
+
+      return res.status(200).json({ message: 'Loged in Sucessfully' , data : results});
+    
     } else {
       return res.status(401).send({ message: 'Incorrect ID or Password'});
     }
+    
+
     console.log(results);
     // res.status(200).send({ message: 'Acces granted'});
 
@@ -387,16 +402,20 @@ app.post('/adminlogin', (req, res) => {
     }
     
     if (results.length > 0) {
+
+      console.log(results);
+
+      let token = jwt.sign({ id: results[0].id, role: "admin"}, process.env.JWT_SECRET, { expiresIn: '24h'});
+
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict', expires: new Date(Date.now() + 24 * 60 * 60 * 1000) });
+
       return res.status(200).send({ message: 'acess granted'});
     } else {
       return res.status(401).send({ message: 'Incorrect ID or Password'});
     }
 
-    console.log(results);
-
   });
 });
-
 
 
 app.post('/bookingdetails', (req, res) => {
@@ -439,7 +458,7 @@ app.post('/customerbookingdetails', (req, res) => {
 
 
 
-app.post('/wishlist', (req, res) => {
+app.post('/wishlist', VerifyToken, AuthorizedRoles("user"), (req, res) => {
   let customer_id = req.body
   console.log(req.body.car)
   let query = `SELECT * FROM wishlist where customer_id = ?`;
@@ -459,7 +478,7 @@ app.post('/wishlist', (req, res) => {
 );
 
 
-app.post('/wishlistcars', (req, res) => {
+app.post('/wishlistcars', VerifyToken, AuthorizedRoles("user"), (req, res) => {
   let carid = req.body.carid
   console.log(req.body.carid)
 
@@ -485,7 +504,7 @@ app.post('/wishlistcars', (req, res) => {
 
 
 
-app.post('/addwishlist', (req, res) => {
+app.post('/addwishlist', VerifyToken, AuthorizedRoles("user"), (req, res) => {
   let {customer_id , carid} = req.body
   console.log(req.body)
   let query = `INSERT INTO wishlist(customer_id, carid) VALUES (? , ?)`;
@@ -505,7 +524,7 @@ app.post('/addwishlist', (req, res) => {
 );
 
 
-app.post('/checkwishlist', (req, res) => {
+app.post('/checkwishlist', VerifyToken, AuthorizedRoles("user"), (req, res) => {
   let {customer_id , carid} = req.body
   console.log(req.body)
   let query = `SELECT * FROM wishlist WHERE customer_id = ? and carid = ?`;
@@ -524,7 +543,7 @@ app.post('/checkwishlist', (req, res) => {
 );
 
 
-app.post('/removewishlist', (req, res) => {
+app.post('/removewishlist', VerifyToken, AuthorizedRoles("user"), (req, res) => {
   let {customer_id , carid} = req.body
   console.log(req.body)
   let query = `DELETE FROM wishlist WHERE customer_id = '${customer_id}' and carid ='${carid}'`;
