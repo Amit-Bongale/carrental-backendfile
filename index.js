@@ -51,8 +51,6 @@ app.post('/carsdata', (req, res) => {
         res.status(500).send('Internal Server Error');
         return;
       }
-      
-      console.log(results)
       res.json(results);
       
     });
@@ -69,7 +67,6 @@ app.post('/cars/carsdata', (req, res) => {
         res.status(500).send('Internal Server Error');
         return;
       }
-      
       console.log(results)
       res.json(results);
       
@@ -515,7 +512,6 @@ app.post('/addwishlist', VerifyToken, AuthorizedRoles("user"), (req, res) => {
         res.status(500).send('Internal Server Error');
         return;
       }
-      
       console.log(results)
       res.json(results);
       
