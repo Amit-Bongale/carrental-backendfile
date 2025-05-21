@@ -349,15 +349,16 @@ app.post('/signup', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { email , password } = req.body;
+  console.log(email , password)
 
-  let query = `select * from users where email = '${email}' and password= '${password}' `;
+  let query = `select * from users where email = ? and password = ? `;
   console.log(query);
 
-  db.query(query, (err, results) => {
+  db.query(query, [email , password], (err, results) => {
 
     if (err) {
       console.error('Error Fetching data:', err);
-      res.status(500).send({ sqlMessage: err.sqlMessage });
+      res.status(500).send({ message: "Please Check Your ID and Password" });
       return;
     }
     
@@ -368,16 +369,12 @@ app.post('/login', (req, res) => {
       res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict', expires: new Date(Date.now() + 24 * 60 * 60 * 1000) }
       )
 
-      return res.status(200).json({ message: 'Loged in Sucessfully' , data : results});
+      return res.status(200).json({success: true,  message: 'Loged in Sucessfully' , data : results});
     
     } else {
-      return res.status(401).send({ message: 'Incorrect ID or Password'});
+      return res.status(401).send({ message: 'Invalid Credentials'});
     }
     
-
-    console.log(results);
-    // res.status(200).send({ message: 'Acces granted'});
-
   });
 });
 
@@ -387,10 +384,10 @@ app.post('/adminlogin', (req, res) => {
 
   const { id , password } = req.body;
 
-  let query = `select * from admin where id ='${id}' and password='${password}' `;
+  let query = `select * from admin where id = ? and password= ?`;
   console.log(query);
 
-  db.query(query, (err, results) => {
+  db.query(query,[id,password], (err, results) => {
 
     if (err) {
       console.error('Error Fetching data:', err);
@@ -406,7 +403,7 @@ app.post('/adminlogin', (req, res) => {
 
       res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict', expires: new Date(Date.now() + 24 * 60 * 60 * 1000) });
 
-      return res.status(200).send({ message: 'acess granted'});
+      return res.status(200).send({ success: true, message: 'Login Sucessfully', data: results });
     } else {
       return res.status(401).send({ message: 'Incorrect ID or Password'});
     }
