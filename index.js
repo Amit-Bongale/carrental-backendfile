@@ -10,7 +10,6 @@ const AuthorizedRoles = require('./Middleware/AuthorizedRoles.js');
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 const env = require("dotenv");
 env.config();
 
@@ -19,19 +18,39 @@ app.use(cors());
 
 app.use(cookieParser());
 
+
 // MySQL Connection
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD ,
-  database: process.env.DB_NAME,
-});
+let db
+function handleDbConnect() {
+  db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD ,
+    database: process.env.DB_NAME,
+  });
+}
+
+handleDbConnect();
 
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
+    setTimeout(() => {
+      console.log('Retrying MySQL connection...');
+      handleDbConnect();
+    }, 2000); // Retry after 2 seconds
   } else {
     console.log('Connected to MySQL', process.env.DB_PORT);
+  }
+});
+
+db.on('error', (err) => {
+  console.error('MySQL error', err);
+  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+    console.log('Reconnecting to MySQL...');
+    handleDbConnect(); // Reconnect
+  } else {
+    throw err;
   }
 });
 
